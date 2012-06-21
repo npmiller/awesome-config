@@ -116,7 +116,7 @@ function makeCategoriesMenu(categories)
 		table.insert(subMenu,"my"..categories[i].."menu")
 	end
 	menu = menu .. makeMenu(categories,subMenu)
-	menu = menu .. "{ 'Actualiser', 'lua " .. config .. "/awesome/lib/menMaker.lua'},\n }"
+	menu = menu .. "{ 'Actualiser', 'lua " .. config .. "/awesome/lib/menuMaker.lua'},\n }"
 	return menu
 end
 --}}

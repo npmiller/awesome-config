@@ -24,6 +24,9 @@ myOfficemenu = {
 { 'ePDFViewer' , 'epdfview %f' },
 { 'Gnumeric' , 'gnumeric %U' },
 { 'HomeBank' , 'homebank %F' },
+{ 'LibreOffice Draw' , 'libreoffice --draw %U' },
+{ 'LibreOffice Impress' , 'libreoffice --impress %U' },
+{ 'LibreOffice ' , 'libreoffice %U' },
 { 'Zathura' , 'zathura %f' },
 }
 myUtilitymenu = { 
@@ -78,11 +81,13 @@ mySystemmenu = {
 }
 mySettingsmenu = { 
 { 'ARandR' , 'arandr' },
+{ 'Manage Printing' , '/usr/bin/xdg-open http://localhost:631/' },
 { 'Preferred Applications' , 'exo-preferred-applications' },
 { 'Adobe Flash Player' , 'flash-player-properties' },
 { 'Customize Look and Feel' , 'lxappearance' },
 { 'NVIDIA X Server Settings' , '/usr/bin/nvidia-settings' },
 { 'Qt Config ' , '/usr/bin/qtconfig' },
+{ 'Printing' , 'system-config-printer' },
 { 'File Manager' , 'thunar-settings' },
 { 'Removable Drives and Media' , 'thunar-volman-settings' },
 }
@@ -97,5 +102,5 @@ categoriesMenu = {
 { 'Graphics' , myGraphicsmenu },
 { 'Game' , myGamemenu },
 { 'Others' , myOthersmenu },
-{ 'Actualiser', 'lua /home/nicolas/.config/awesome/lib/menMaker.lua'},
+{ 'Actualiser', 'lua /home/nicolas/.config/awesome/lib/menuMaker.lua'},
  }

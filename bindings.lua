@@ -89,6 +89,14 @@ awful.key({modkey }, 'c', function()
 	awful.util.getdir('cache') .. '/history_calc'
 	)
 end),
+awful.key({modkey, 'Shift'}, 's', function ()
+	awful.prompt.run({prompt = 'Say: '}, mypromptbox[mouse.screen].widget,
+		function (expr)
+			awful.util.spawn_with_shell('espeak ' .. expr)
+		end
+		)
+	end
+	),
 awful.key({modkey }, 'd', function()
 	awful.prompt.run({ prompt = 'Desktop: ' }, mypromptbox[mouse.screen].widget,
 	function (name) 
@@ -125,10 +133,19 @@ awful.key({ modkey }, 'p', function()
 		function (expr) 
 			awful.util.spawn_with_shell('firefox https://duckduckgo.com/?q=' .. expr)
 			awful.tag.viewonly(tags[mouse.screen][1])
+		end,
+		nil,
+		awful.util.getdir('cache') .. '/history_search'
+		)
+	end),
+	awful.key({modkey}, 'i', function()
+		awful.prompt.run({ prompt = 'install: '}, mypromptbox[mouse.screen].widget,
+		function (expr)
+			awful.util.spawn_with_shell(terminal .. ' -e yaourt -S '..expr) end,
+			nil,
+			awful.util.getdir('cache') .. '/history_install')
 		end)
-	end)
-
-
+			
 
 	)
 

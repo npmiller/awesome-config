@@ -21,8 +21,8 @@ filesmenu = {
 	{ 'Pics',  genMenu('/home/nicolas/Pics/')},
 	{ 'Screenshots',  genMenu('/home/nicolas/Screenshots/')},
 	{ 'Series',  genMenu('/media/DATA/Series/')},
-	{ 'Mount USB', 'mount /media/USB' },
-	{ 'Umount USB', 'umount /media/USB' }
+	{ 'Mount USB', 'mount /mnt/USB' },
+	{ 'Umount USB', 'umount /mnt/USB' }
 }
 
 mymainmenu = awful.menu({ items = { { 'awesome', myawesomemenu --[[, beautiful.awesome_icon --]] },
