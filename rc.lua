@@ -146,10 +146,7 @@ for s = 1, screen.count() do
 
 	--Volume control
 	require('widgets/vol')
-	--Refresh volume applet
-	volbar_timer = timer({ timeout = 1 })
-	volbar_timer:add_signal('timeout', function () volume('update',volbar) end)
-	volbar_timer:start()
+	volume("update",volbar)
 
 	--Mpd widget
 --	require('widgets/mpd')

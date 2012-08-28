@@ -34,8 +34,8 @@ volimg.image = image(beautiful.note)
 	volimg:buttons(awful.util.table.join(
     awful.button({ }, 1, function () awful.util.spawn("amixer -q sset Master toggle", false) end),
     awful.button({ }, 3, function () awful.util.spawn("urxvtc -e alsamixer", true) end),
-    awful.button({ }, 4, function () awful.util.spawn("amixer -q sset Master 5dB+", false) end),
-    awful.button({ }, 5, function () awful.util.spawn("amixer -q sset Master 5dB-", false) end)
+    awful.button({ }, 4, function () volume("up",volbar) end),
+    awful.button({ }, 5, function () volume("down",volbar) end)
 	))
 
 volbar = awful.widget.progressbar()
@@ -50,7 +50,7 @@ awful.widget.layout.margins[volbar.widget] = { top = 6 }
 	volbar.widget:buttons(awful.util.table.join(
     awful.button({ }, 1, function () awful.util.spawn("amixer -q sset Master toggle", false) end),
     awful.button({ }, 3, function () awful.util.spawn("urxvtc -e alsamixer", true) end),
-    awful.button({ }, 4, function () awful.util.spawn("amixer -q sset Master 5dB+", false) end),
-    awful.button({ }, 5, function () awful.util.spawn("amixer -q sset Master 5dB-", false) end)
+    awful.button({ }, 4, function () volume("up",volbar) end),
+    awful.button({ }, 5, function () volume("down",volbar) end)
 	))
 
