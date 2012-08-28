@@ -53,7 +53,7 @@ layouts =
 -- Define a tag table which hold all screen tags.
 tags = {
 	names = { 'web' , 'term' , 'office' ,'file' , 'film' , 'misc' ,  'music' , 'mail' , 'im' },
-	layout = { layouts[4] , layouts[2] , layouts[2] , layouts[2] , layouts[2] , layouts[2] , layouts[2] , layouts[2] , layouts[2] } 
+	layout = { layouts[1] , layouts[2] , layouts[2] , layouts[2] , layouts[2] , layouts[2] , layouts[2] , layouts[2] , layouts[2] } 
 }
 for s = 1, screen.count() do
 	-- Each screen has its own tag table.
@@ -155,17 +155,18 @@ for s = 1, screen.count() do
 --	require('widgets/mpd')
 
 	--Irc widget
-	require('widgets.irc')
-	tools = { }
-	tools.irc = widgets.irc({ }, {
-		text = "<span font_desc='Dejavu Sans 11'>&#x2318;</span>",
-		highlights = { 'pata' },
-		clientname = 'weechat-curses',
-	})
+--	require('widgets.irc')
+--	tools = { }
+--	tools.irc = widgets.irc({ }, {
+--		text = "<span font_desc='Dejavu Sans 11'>&#x2318;</span>",
+--		highlights = { 'pata' },
+--		clientname = 'weechat-curses',
+--	})
 
 	--Battery applet
 	require('widgets/battery')
 	--Refresh battery applet
+	bat(batbar,batimg)
 	batbar_timer = timer({ timeout = 9 })
 	batbar_timer:add_signal('timeout', function () bat(batbar,batimg) end)
 	batbar_timer:start()
@@ -192,7 +193,7 @@ for s = 1, screen.count() do
 			rbracket,space,batbar.widget,batimg,lbracket,
 			space,
 		--	rbracket,mpdtext,lbracket,
-			tools.irc.widget,
+		--	tools.irc.widget,
 			layout = awful.widget.layout.horizontal.rightleft
 		},
 

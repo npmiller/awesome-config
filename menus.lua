@@ -9,10 +9,12 @@ myawesomemenu = {
 	{ 'quit', awesome.quit }
 }
 sysmenu = {
+	{ 'Update', terminal .. ' -e yaourt -Sayu'},
 	{ 'Shutdown', 'halt' },
 	{ 'Reboot', 'reboot' },
 	{ 'Suspend', 'suspend' },
 } 
+--[[
 filesmenu = {
 	{ 'Documents', genMenu('/home/nicolas/Documents/')},
 	{ 'Desktop',  genMenu('/home/nicolas/Desktop/')},
@@ -23,12 +25,12 @@ filesmenu = {
 	{ 'Series',  genMenu('/media/DATA/Series/')},
 	{ 'Mount USB', 'mount /mnt/USB' },
 	{ 'Umount USB', 'umount /mnt/USB' }
-}
+}--]]
 
 mymainmenu = awful.menu({ items = { { 'awesome', myawesomemenu --[[, beautiful.awesome_icon --]] },
 { 'System', sysmenu },
 { 'Apps', categoriesMenu },
-{ 'Files', filesmenu },
+--{ 'Files', filesmenu },
 { 'open terminal', terminal }
 } })
 
