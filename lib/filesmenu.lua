@@ -51,6 +51,3 @@ end
 function genMenu(dir)
 	return parse(ls(dir))
 end
-function genMenuD()
-	return parse(ls('/home/nicolas/Desktop/'))
-end
