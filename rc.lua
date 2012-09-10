@@ -6,7 +6,7 @@ require('beautiful')
 -- Notification library
 require('naughty')
 
-require('revelation')
+--:Wrequire('revelation')
 --Widgets
 --require('mocp')
 require('lib/runBackground')
@@ -164,9 +164,11 @@ for s = 1, screen.count() do
 	require('widgets/battery')
 	--Refresh battery applet
 	bat(batbar,batimg)
-	batbar_timer = timer({ timeout = 9 })
+	batbar_timer = timer({ timeout = 7 })
 	batbar_timer:add_signal('timeout', function () bat(batbar,batimg) end)
 	batbar_timer:start()
+
+	require('widgets/usbmount')
 
 	require('widgets/spacers')
 
@@ -189,6 +191,7 @@ for s = 1, screen.count() do
 			space,
 			rbracket,space,batbar.widget,batimg,lbracket,
 			space,
+			usbimg,
 		--	rbracket,mpdtext,lbracket,
 		--	tools.irc.widget,
 			layout = awful.widget.layout.horizontal.rightleft
