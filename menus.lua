@@ -3,14 +3,14 @@ require('lib/filesmenu')
 
 --Create the main menu
 myawesomemenu = {
-	{ 'manual', terminal .. ' -e man awesome' },
-	{ 'edit config', editor_cmd .. ' ' .. awful.util.getdir('config') .. '/rc.lua' },
-	{ 'restart', awesome.restart },
-	{ 'quit', awesome.quit }
+	{ 'Manual', terminal .. ' -e man awesome' },
+	{ 'Edit config', editor_cmd .. ' ' .. awful.util.getdir('config') .. '/rc.lua' },
+	{ 'Restart', awesome.restart },
+	{ 'Quit', awesome.quit }
 }
 sysmenu = {
 	{ 'Update', terminal .. ' -e yaourt -Sayu'},
-	{ 'Shutdown', 'halt' },
+	{ 'Shutdown', 'poweroff' },
 	{ 'Reboot', 'reboot' },
 	{ 'Suspend', 'suspend' },
 } 
@@ -27,10 +27,10 @@ filesmenu = {
 	{ 'Umount USB', 'umount /mnt/USB' }
 }--]]
 
-mymainmenu = awful.menu({ items = { { 'awesome', myawesomemenu --[[, beautiful.awesome_icon --]] },
+mymainmenu = awful.menu({ items = { { 'Awesome', myawesomemenu --[[, beautiful.awesome_icon --]] },
 { 'System', sysmenu },
 { 'Apps', categoriesMenu },
 --{ 'Files', filesmenu },
-{ 'open terminal', terminal }
+{ 'Open terminal', terminal }
 } })
 

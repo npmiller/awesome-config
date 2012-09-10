@@ -146,7 +146,7 @@ for s = 1, screen.count() do
 
 	--Volume control
 	require('widgets/vol')
-	volume("update",volbar)
+	volume("update",volbar,volimg)
 
 	--Mpd widget
 --	require('widgets/mpd')
