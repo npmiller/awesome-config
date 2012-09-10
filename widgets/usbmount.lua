@@ -42,7 +42,7 @@ end
 
 function usbUnmount(disk)
 	f = io.popen('udisks --unmount /dev/' .. disk)
-	info = f:read('*all')
+	info = f:read('*line')
 	f:close()
 	return info
 end
@@ -59,7 +59,7 @@ function display()
 
 		f = io.popen('udisks --show-info /dev/' .. disks[i] .. ' | grep "mount paths"')
 		elt = string.gsub(f:read('*line'),'  mount paths:             ','') .. ' ' .. elt
-		str = str .. elt .. '\n'
+		str = str .. elt .. ' \n'
 	end
 	return "<span font_desc='monospace 10'>" .. str .. "</span>"
 end
@@ -76,6 +76,13 @@ function chd(delta)
 
 end
 
+function lsof(disk)
+	f = io.popen('lsof /dev/' .. disk)
+	i = f:read('*all')
+	f:close()
+	return i
+end
+
 usbimg = widget({type = 'imagebox'})
 usbimg.image = image(beautiful.usb)
 usbimg.visible = false
@@ -90,9 +97,11 @@ usbimg:buttons(awful.util.table.join(
 	awful.button({ }, 4, function() chd(-1) end),
 	awful.button({ }, 5, function() chd(1) end),
 	awful.button({ }, 1, function() 
-		usbMount(disks[hl]) end),
+		naughty.notify({text = usbMount(disks[hl])}) end),
 	awful.button({ }, 3, function()
-		usbUnmount(disks[hl]) end)))
+		t = usbUnmount(disks[hl]) .. '\n\n' .. lsof(disks[hl])
+		if t ~= '' then naughty.notify({text = t, timeout = 10}) end 
+	end)))
 usbimg.visible = usbCheck()
 usbimg_timer = timer({ timeout = 3 })
 usbimg_timer:add_signal('timeout', function ()
