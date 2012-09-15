@@ -41,9 +41,9 @@ function ()
 end),
 
 --Multimedia keys
-awful.key({ }, 'XF86AudioRaiseVolume', function () volume('up',vol) end),
-awful.key({ }, 'XF86AudioLowerVolume', function () volume('down',vol) end),
-awful.key({ }, 'XF86AudioMute', function () volume('mute',vol) end),
+awful.key({ }, 'XF86AudioRaiseVolume', function () volume('up',volbar,volimg) end),
+awful.key({ }, 'XF86AudioLowerVolume', function () volume('down',volbar,volimg) end),
+awful.key({ }, 'XF86AudioMute', function () volume('mute',volbar,volimg) end),
 awful.key({ }, 'XF86AudioPlay', function () awful.util.spawn_with_shell('ncmpcpp toggle') end),     	
 awful.key({modkey}, 'e', revelation),
 awful.key({modkey}, 'v', function() awful.util.spawn_with_shell('slimlock') end),
