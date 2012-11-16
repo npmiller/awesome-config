@@ -8,12 +8,12 @@ awful.rules.rules = {
 	focus = true,
 	keys = clientkeys,
 	buttons = clientbuttons,
-	--  size_hints_honor = false <-- remove gap between windows
+	size_hints_honor = false --<--- remove gap between windows
 } },
 { rule = { class = "MPlayer" }, properties = { floating = true } },
 { rule = { class = "pinentry" }, properties = { floating = true } },
 { rule = { class = "gimp" }, properties = { floating = true } },
-{ rule = { name = "Gnuplot" }, properties = { floating = true } }, 
+{ rule = { class = "Gnuplot" }, properties = { floating = true } }, 
 -- Apps repartition
 { rule = { class = "Firefox" }, properties = { tag = tags[1][1], maximised=true, floating=false } },
 { rule = { class = "plugin-container" }, properties = { floating = true } },

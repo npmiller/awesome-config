@@ -16,7 +16,7 @@ theme.wallpaper_cmd = { "awsetbg " .. folder .. "background" }
 -- }}}
 
 -- {{{ Styles
---theme.font      = "Cantarelle 10"
+--theme.font      = "DejaVuSansMono 8"
 
 -- {{{ Colors
 theme.fg_normal = "#FFFFFF"
@@ -39,12 +39,12 @@ theme.titlebar_bg_focus  = "#3F3F3F"
 theme.titlebar_bg_normal = "#3F3F3F"
 -- }}}
 
--- There are other variable sets
--- overriding the default one when
--- defined, the sets are:
--- [taglist|tasklist]_[bg|fg]_[focus|urgent]
--- titlebar_[normal|focus]
--- tooltip_[font|opacity|fg_color|bg_color|border_width|border_color]
+--There are other variable sets
+--overriding the default one when
+--defined, the sets are:
+--[taglist|tasklist]_[bg|fg]_[focus|urgent]
+--titlebar_[normal|focus]
+--tooltip_[font|opacity|fg_color|bg_color|border_width|border_color]
 -- Example:
 theme.taglist_bg_focus = "#000000"
 theme.taglist_fg_focus = "#8F8F8F8F"

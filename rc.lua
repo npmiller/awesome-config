@@ -11,7 +11,7 @@ require('naughty')
 --require('mocp')
 require('lib/runBackground')
 
---awful.util.spawn_with_shell('xcompmgr')
+awful.util.spawn_with_shell('xcompmgr')
 --awful.util.spawn_with_shell('xsetroot -cursor_name left_ptr')
 --awful.util.spawn_with_shell('wicd-client --tray')
 awful.util.spawn_with_shell('urxvtd')

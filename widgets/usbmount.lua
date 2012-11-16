@@ -43,7 +43,7 @@ end
 
 function usbUnmount(disk)
 	f = io.popen('udisksctl unmount -b /dev/disk/by-label/' .. disk)
-	info = f:read('*line')
+	info = f:read('*all')
 	f:close()
 	return info
 end
@@ -77,7 +77,10 @@ function chd(delta)
 end
 
 function lsof(disk)
-	f = io.popen('lsof /dev/disk/by-label/' .. disk)
+	p = io.popen('readlink /dev/disk/by-label/' .. disk)
+	path = p:read('*all')
+	p:close()
+	f = io.popen('lsof /dev/disk/by-label/' .. path)
 	i = f:read('*all')
 	f:close()
 	return i

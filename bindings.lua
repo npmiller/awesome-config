@@ -45,11 +45,13 @@ awful.key({ }, 'XF86AudioRaiseVolume', function () volume('up',volbar,volimg) en
 awful.key({ }, 'XF86AudioLowerVolume', function () volume('down',volbar,volimg) end),
 awful.key({ }, 'XF86AudioMute', function () volume('mute',volbar,volimg) end),
 awful.key({ }, 'XF86AudioPlay', function () awful.util.spawn_with_shell('ncmpcpp toggle') end),     	
+awful.key({ }, 'XF86AudioNext', function () awful.util.spawn_with_shell('ncmpcpp next') end),     	
+awful.key({ }, 'XF86AudioPrev', function () awful.util.spawn_with_shell('ncmpcpp prev') end),     	
 awful.key({modkey}, 'e', revelation),
 awful.key({modkey}, 'v', function() awful.util.spawn_with_shell('slimlock') end),
 
 --Print Screen
-awful.key({ 'Control' }, 'Print', function () awful.util.spawn_with_shell('emprint /home/nicolas/Screenshots/') end),
+--awful.key({ 'Control' }, 'Print', function () awful.util.spawn_with_shell('emprint /home/nicolas/Screenshots/') end),
 awful.key({ modkey }, 'Print', function () awful.util.spawn_with_shell('emprint --region /home/nicolas/Screenshots') end),
 awful.key({ modkey, 'shift' }, 'Print', function () awful.util.spawn_with_shell('emprint --window /home/nicolas/Screenshots') end),
 
