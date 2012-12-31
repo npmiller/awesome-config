@@ -1,5 +1,6 @@
 require('appMenu')
-require('lib/filesmenu')
+--require('lib/filesmenu')
+local awful = require('awful')
 
 --Create the main menu
 configmenu = {
@@ -23,19 +24,19 @@ sysmenu = {
 } 
 
 
-filesmenu = {
+--filesmenu = {
 	--{ 'Documents',function () co = coroutine.create(function () return genMenu('/home/nicolas/Documents/') end) ; _,tab = coroutine.resume(co) ; return tab end },
-	{ 'Documents',genMenu('/home/nicolas/Documents/')},
-	{ 'Desktop',  genMenu('/home/nicolas/Desktop/')},
-	{ 'Info',  genMenu('/home/nicolas/Info/')},
-	{ 'Downloads',  genMenu('/home/nicolas/Downloads/')},
-	{ 'Pics',  genMenu('/home/nicolas/Pics/')},
-	{ 'Screenshots',  genMenu('/home/nicolas/Screenshots/')},
-	{ 'Musique',  genMenu('/home/nicolas/Musique/')},
+	--{ 'Documents',genMenu('/home/nicolas/Documents/')},
+	--{ 'Desktop',  genMenu('/home/nicolas/Desktop/')},
+	--{ 'Info',  genMenu('/home/nicolas/Info/')},
+	--{ 'Downloads',  genMenu('/home/nicolas/Downloads/')},
+	--{ 'Pics',  genMenu('/home/nicolas/Pics/')},
+	--{ 'Screenshots',  genMenu('/home/nicolas/Screenshots/')},
+	--{ 'Musique',  genMenu('/home/nicolas/Musique/')},
 	--{ 'Series',  genMenu('/media/Home/Series/')},
 	--{ 'Mount USB', 'mount /mnt/USB' },
 	--{ 'Umount USB', 'umount /mnt/USB' }
-}
+--}
 
 mymainmenu = awful.menu({ items = { { 'Awesome', myawesomemenu --[[, beautiful.awesome_icon --]] },
 { 'System', sysmenu },

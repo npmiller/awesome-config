@@ -1,45 +1,73 @@
 --Battery applet
 --
---Full charge :
-io.input("/sys/class/power_supply/BAT0/charge_full")
-full_charge = tonumber(io.read("*line"))
+local awful = require('awful')
+local beautiful = require('beautiful')
+local wibox = require('wibox')
+local setmetatable = setmetatable
 
-function bat(bar,img)
+local battery = { }
+
+function battery:new(bat_name, props)
+	local props = props or { }
+	local imgs = props.imgs or { charging = beautiful.ac_01, discharging = beautiful.bat_empty_01 }
+	local bar_props = props.bar_props or { }
+	local bar_margins = props.bar_margins or { }
+
+	local bat = { }
+	
+	bat.bat_name = bat_name
+	-- Creating progressbar
+	bat.bar = awful.widget.progressbar()
+	-- Setting progressbar properties
+	bat.bar:set_width(bar_props.width or 50)
+	bat.bar:set_height(bar_props.width or 6)
+	bat.bar:set_vertical(bar_props.vertical or false)
+	bat.bar:set_background_color(bar_props.bg_color or beautiful.bg_normal or '#434343')
+	bat.bar:set_border_color(nil or bar_props.border_color)
+	bat.bar:set_color(bar_props.fg_color or beautiful.fg_normal or '#000000')
+	-- Settings margins on the progressbar
+	bat.barm = wibox.layout.margin(bat.bar, bar_margins.left or 0,
+											bar_margins.right or 0,
+											bar_margins.top or 6,
+											bar_margins.bottom or 4)
+	-- Icons
+	bat.img = wibox.widget.imagebox()
+	bat.imgs = imgs
+	--Full charge :
+	io.input('/sys/class/power_supply/' .. bat.bat_name .. '/charge_full')
+	bat.full_charge = tonumber(io.read("*line"))
+
+	setmetatable(bat, {__index = self})
+
+	return bat
+end
+
+function battery.update(self)
 	--Current charge :
-	io.input("/sys/class/power_supply/BAT0/charge_now")
-	current_charge = tonumber(io.read("*line"))
+	io.input("/sys/class/power_supply/" .. self.bat_name .. "/charge_now")
+	local current_charge = tonumber(io.read("*line"))
 
 	--Battery state :
-	io.input("/sys/class/power_supply/BAT0/status")
-	status = io.read("*line")
+	io.input("/sys/class/power_supply/" .. self.bat_name .. "/status")
+	local status = io.read("*line")
 	
-	charge = (current_charge/full_charge)
+	local charge = (current_charge/self.full_charge)
 
 	if string.match(status,"Discharging") then
 		if charge <= 0.15 then
-			bar:set_value(charge)
-			img.image = image(beautiful.bat_empty_01)
+			self.bar:set_value(charge)
+			self.img:set_image(self.imgs.discharging)
 		else
-			bar:set_value(charge)
-			img.image = image(beautiful.bat_empty_01)
+			self.bar:set_value(charge)
+			self.img:set_image(self.imgs.discharging)
 		end
 	elseif string.match(status,"Charging") then
-		bar:set_value(charge)
-		img.image= image(beautiful.ac_01)
+		self.bar:set_value(charge)
+		self.img:set_image(self.imgs.charging)
 	else
-		bar:set_value(charge)
-		img.image= image(beautiful.ac_01)
+		self.bar:set_value(charge)
+		self.img:set_image(self.imgs.charging)
 	end
 end
 
-batbar = awful.widget.progressbar()
-batbar:set_width(50)
-batbar:set_height(6)
-batbar:set_vertical(false)
-batbar:set_background_color("#434343")
-batbar:set_border_color(nil)
-batbar:set_gradient_colors({ beautiful.fg_normal, beautiful.fg_normal, beautiful.fg_normal, beautiful.bar })
-awful.widget.layout.margins[batbar.widget] = { top = 6 }
-
-batimg = widget({ type = "imagebox" })
-batimg.image = image(beautiful.ac_01)
+return battery

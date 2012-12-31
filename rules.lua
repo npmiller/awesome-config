@@ -1,6 +1,7 @@
-require("awful.rules")
+local rules = require("awful.rules")
+local beautiful = require('beautiful')
 -- {{{ Rules
-awful.rules.rules = {
+rules.rules = {
 	-- All clients will match this rule.
 	{ rule = { },
 	properties = { border_width = beautiful.border_width,

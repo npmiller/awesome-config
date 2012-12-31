@@ -1,13 +1,13 @@
--- A simple tool to mount devices within awesome using Udisks
---
-
+local wibox = require('wibox')
+local beautiful = require('beautiful')
+local awful = require('awful')
+local naughty = require('naughty')
 
 hl = 1
 disks = { }
-
 function usbCheck()
-	ignoredDevices = { 'ArchLinux', 'DATA', 'Home', 'OS', 'openSUSE' }
-	cmd = 'ls /dev/disk/by-label/'
+	ignoredDevices = { 'sda', 'sr0' }
+	cmd = 'udisks --enumerate'
 	for i=1,#ignoredDevices do
 		cmd = cmd .. ' | grep -v ' .. ignoredDevices[i] 
 	end
@@ -19,50 +19,54 @@ function usbCheck()
 		return false
 	else
 		while line ~= nil do
-			table.insert(disks,line)
+			disk = string.match(line,'sd%a%d')
+			if disk ~= nil then
+				table.insert(disks,disk)
+			end
 			line = f:read('*line')
 		end
 		f:close()
-		--[[ Inutile de vérifier que le tableau est vide dans ce cas là
-		[if next(disks) ~= nil then
-		[        return true
-		[else
-		[        return false
-		[end
-		]]
-		return true
+		if next(disks) ~= nil then
+			return true
+		else
+			return false
+		end
 	end
 end
 
+
 function usbMount(disk)
-	f = io.popen('udisksctl mount -b /dev/disk/by-label/' .. disk)
+	f = io.popen('udisks --mount /dev/' .. disk)
 	info = f:read('*all')
 	f:close()
 	return info
 end
 
+
 function usbUnmount(disk)
-	f = io.popen('udisksctl unmount -b /dev/disk/by-label/' .. disk)
-	info = f:read('*all')
+	local f = io.popen('udisks --unmount /dev/' .. disk)
+	local info = f:read('*line')
 	f:close()
 	return info
 end
+
 
 function display()
 	local str = ''
 	for i=1,#disks do
+		f = io.popen('udisks --show-info /dev/' .. disks[i] .. ' | grep label')
+		elt = string.gsub(f:read('*line'),'  label:                       ','')
+		f:close()
 		if i == hl then
-			elt = '<u>' .. disks[i] ..'</u>'
-		else
-			elt = disks[i]
+			elt = '<u>' .. elt ..'</u>'
 		end
-
-		f = io.popen('udisksctl info -b /dev/disk/by-label/' .. disks[i] .. ' | grep "MountPoints:"')
-		elt = string.gsub(f:read('*line'),'    MountPoints:        ','') .. ' ' .. elt
+		f = io.popen('udisks --show-info /dev/' .. disks[i] .. ' | grep "mount paths"')
+		elt = string.gsub(f:read('*line'),'  mount paths:             ','') .. ' ' .. elt
 		str = str .. elt .. ' \n'
 	end
 	return "<span font_desc='monospace 10'>" .. str .. "</span>"
 end
+
 
 
 function chd(delta)
@@ -73,41 +77,51 @@ function chd(delta)
 		hl = 1
 	end
 	usbtooltip:set_text(display())
-
 end
+
 
 function lsof(disk)
-	p = io.popen('readlink /dev/disk/by-label/' .. disk)
-	path = p:read('*all')
-	p:close()
-	f = io.popen('lsof /dev/disk/by-label/' .. path)
-	i = f:read('*all')
+	local f = io.popen('lsof /dev/' .. disk)
+	local info = ''
+	info = info .. f:read('*all')
 	f:close()
-	return i
+	return info
 end
 
-usbimg = widget({type = 'imagebox'})
-usbimg.image = image(beautiful.usb)
-usbimg.visible = false
 
-usbtooltip = awful.tooltip({ })
-usbtooltip:add_to_object(usbimg)
-usbimg:add_signal('mouse::enter', function()
+local usb = {}
+usb.img = wibox.widget.imagebox()
+function usb.img.visible(self, bool)
+	if bool then
+		self:set_image(beautiful.usb)
+	else
+		self:set_image()
+	end
+end
+
+--usb.img:draw(false)
+usb.tooltip = awful.tooltip({ })
+usb.tooltip:add_to_object(usb.img)
+usb.img:connect_signal('mouse::enter', 
+function()
 	hl = 1
 	usbCheck()
-	usbtooltip:set_text(display()) end)
-	usbimg:buttons(awful.util.table.join(
-	awful.button({ }, 4, function() chd(-1) end),
-	awful.button({ }, 5, function() chd(1) end),
-	awful.button({ }, 1, function() 
-		naughty.notify({text = usbMount(disks[hl])}) end),
-		awful.button({ }, 3, function()
-			t = usbUnmount(disks[hl]) .. '\n\n' .. lsof(disks[hl])
-			if t ~= '' then naughty.notify({text = t, timeout = 10}) end 
-		end)))
-		usbimg.visible = usbCheck()
-		usbimg_timer = timer({ timeout = 3 })
-		usbimg_timer:add_signal('timeout', function ()
-			usbimg.visible = usbCheck() end)
-			usbimg_timer:start()
+	usb.tooltip:set_text(display()) 
+end)
 
+usb.img:buttons(awful.util.table.join(
+awful.button({ }, 4, function() chd(-1) end),
+awful.button({ }, 5, function() chd(1) end),
+awful.button({ }, 1, function() naughty.notify({text = usbMount(disks[hl])}) end),
+awful.button({ }, 3, function()
+	t = usbUnmount(disks[hl]) or 'Unmounted ' .. disks[hl]
+	t = t .. '\n\n'  .. lsof(disks[hl])
+	naughty.notify({text = t, timeout = 10})
+end)))
+usb.img:visible(usbCheck())
+usb.img_timer = timer({ timeout = 3 })
+usb.img_timer:connect_signal('timeout', function ()
+	usb.img:visible(usbCheck())
+end)
+usb.img_timer:start()
+return usb

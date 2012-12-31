@@ -1,3 +1,6 @@
+local awful = require('awful')
+local menubar = require('menubar')
+local naughty = require('naughty')
 -- {{{ Mouse bindings
 root.buttons(awful.util.table.join(
 awful.button({ }, 3, function () mymainmenu:toggle() end),
@@ -120,7 +123,7 @@ awful.key({modkey }, 'd', function()
 	)
 end),
 
-awful.key({ modkey }, 'p', function()
+awful.key({ modkey, 'Shift' }, 'p', function()
 	awful.prompt.run({ prompt = 'Ping: ' }, mypromptbox[mouse.screen].widget,
 	function (expr)
 		run_background('ping -c 5 '.. expr, function(result)
@@ -146,8 +149,9 @@ awful.key({ modkey }, 'p', function()
 			awful.util.spawn_with_shell(terminal .. ' -e yaourt -S '..expr) end,
 			nil,
 			awful.util.getdir('cache') .. '/history_install')
-		end)
+		end),
 			
+    awful.key({ modkey }, "p", function() menubar.show() end)
 
 	)
 
@@ -157,7 +161,6 @@ awful.key({ modkey }, 'p', function()
 	awful.key({ modkey, 'Control' }, 'space',  awful.client.floating.toggle                     ),
 	awful.key({ modkey, 'Control' }, 'Return', function (c) c:swap(awful.client.getmaster()) end),
 	awful.key({ modkey,           }, 'o',      awful.client.movetoscreen                        ),
-	awful.key({ modkey, 'Shift'   }, 'r',      function (c) c:redraw()                       end),
 	awful.key({ modkey,           }, 't',      function (c) c.ontop = not c.ontop            end),
 	awful.key({ modkey,           }, 'n',
 	function (c)

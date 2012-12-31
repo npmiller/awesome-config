@@ -12,7 +12,7 @@ function run_background(cmd,funtocall)
        file  = logfile,                                                           
        timer = timer{timeout=1}                                                   
    }                                                                              
-   background_timers[cmd].timer:add_signal('timeout',function()                   
+   background_timers[cmd].timer:connect_signal('timeout',function()                   
        local cmdf = io.popen('pgrep -f "' .. cmd .. '"')                          
        local s = cmdf:read('*all')                                                
        cmdf:close()                                                               

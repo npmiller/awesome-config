@@ -1,12 +1,16 @@
-vert = widget({type='textbox',name='spacer'})
-vert.text = ' | '
+local wibox = require('wibox')
 
-space = widget({type='textbox',name='spacer'})
-space.text = ' '
+local spacers = { }
+spacers.vert = wibox.widget.textbox()
+spacers.vert:set_text(' | ')
 
-lbracket =  widget({type='textbox', name = 'spacer'})
-lbracket.text = ' [ '
+spacers.space = wibox.widget.textbox()
+spacers.space:set_text(' ')
 
-rbracket =  widget({type='textbox', name = 'spacer'})
-rbracket.text = ' ] '
+spacers.lbracket =  wibox.widget.textbox()
+spacers.lbracket:set_text(' [ ')
 
+spacers.rbracket =  wibox.widget.textbox()
+spacers.rbracket:set_text(' ] ')
+
+return spacers

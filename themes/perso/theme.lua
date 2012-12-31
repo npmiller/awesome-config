@@ -12,7 +12,8 @@ folder = "/home/nicolas/.config/awesome/themes/perso/"
 
 -- {{{ Main
 theme = {}
-theme.wallpaper_cmd = { "awsetbg " .. folder .. "background" }
+--theme.wallpaper_cmd = { "awsetbg " .. folder .. "background" }
+theme.wallpaper = folder .. "background"
 -- }}}
 
 -- {{{ Styles
@@ -20,7 +21,7 @@ theme.wallpaper_cmd = { "awsetbg " .. folder .. "background" }
 
 -- {{{ Colors
 theme.fg_normal = "#FFFFFF"
-theme.fg_focus  = "#FFFFFF"
+theme.fg_focus  = "#7679E7"
 theme.fg_urgent = "#FFFFFF"
 theme.bg_normal = "#000000"
 theme.bg_focus  = "#000000"
