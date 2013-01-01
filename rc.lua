@@ -116,7 +116,7 @@ menu = mymainmenu })
 --cal.register(mytextclock)
 
 -- Create a systray
-mysystray = wibox.widget.systray
+mysystray = wibox.widget.systray()
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -180,26 +180,30 @@ for s = 1, screen.count() do
 	-- Create a tasklist widget
 	mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
+	mytextclock = awful.widget.textclock()
+
+	local spacers = require('widgets/spacers')
 	--Volume control
 	local volume = require('widgets/vol')
 	volume:update()
+	volume.widget = wibox.layout.fixed.horizontal()
+	volume.widget:add(spacers.lbracket) 
+	volume.widget:add(spacers.space) 
+	volume.widget:add(volume.barm)
+	volume.widget:add(volume.img) 
+	volume.widget:add(spacers.rbracket)
 
-	--Mpd widget
---	require('widgets/mpd')
 
-	--Irc widget
---	require('widgets.irc')
---	tools = { }
---	tools.irc = widgets.irc({ }, {
---		text = "<span font_desc='Dejavu Sans 11'>&#x2318;</span>",
---		highlights = { 'pata' },
---		clientname = 'weechat-curses',
---	})
-
+	
 	--Battery applet
 	local bat = require('widgets/battery')
 	battery = bat:new('BAT0')
-
+	battery.widget = wibox.layout.fixed.horizontal()
+	battery.widget:add(spacers.lbracket) 
+	battery.widget:add(spacers.space)
+	battery.widget:add(battery.barm) 
+	battery.widget:add(battery.img) 
+	battery.widget:add(spacers.rbracket)
 	--Refresh battery applet
 	battery:update()
 	batbar_timer = timer({ timeout = 7 })
@@ -208,7 +212,6 @@ for s = 1, screen.count() do
 
 	local usb = require('widgets/usbmount')
 
-	local spacers = require('widgets/spacers')
 
 	-- Create the wibox
 	--require('lib.layout.center')
@@ -221,12 +224,10 @@ for s = 1, screen.count() do
 
 		local right_layout = wibox.layout.fixed.horizontal()
 		right_layout:add(usb.img)
-		right_layout:add(spacers.space) 
-		right_layout:add(spacers.lbracket) right_layout:add(spacers.space) right_layout:add(volume.barm)
-		right_layout:add(volume.img) right_layout:add(spacers.rbracket)
-		right_layout:add(spacers.lbracket) right_layout:add(spacers.space)
-		right_layout:add(battery.barm) right_layout:add(battery.img) right_layout:add(spacers.rbracket)
-		right_layout:add(spacers.space)
+		right_layout:add(mytextclock)
+		right_layout:add(volume.widget)
+		right_layout:add(battery.widget)
+		
 
 		local layout = wibox.layout.align.horizontal()
 		layout:set_left(left_layout)
@@ -235,9 +236,13 @@ for s = 1, screen.count() do
 
 	my2wibox = awful.wibox({ position = 'bottom', screen = s, height = '18' })
 		local layout2 = wibox.layout.align.horizontal()
-		layout2:set_left(mylayoutbox[s], mysystray)
-		layout2:set_right(mytasklist[s])
+		right_layout = wibox.layout.fixed.horizontal()
+		right_layout:add(mysystray)
+		right_layout:add(mylayoutbox[s])
+		layout2:set_right(right_layout)
+		layout2:set_left(mytasklist[s])
 		my2wibox:set_widget(layout2)
+		--my2wibox:set_bg(gears.color.create_png_pattern("/home/nicolas/test-awesome.png"))
 end
 -- }}}
 
@@ -272,7 +277,7 @@ client.connect_signal('manage', function (c, startup)
 	end
 
     local titlebars_enabled = false
-    if titlebars_enabled and (c.type == "normal" or c.type == "dialog") then
+    if titlebars_enabled and awful.client.floating.get(c) then --(c.type == "normal" or c.type == "dialog")  then
         -- Widgets that are aligned to the left
         local left_layout = wibox.layout.fixed.horizontal()
         left_layout:add(awful.titlebar.widget.iconwidget(c))
