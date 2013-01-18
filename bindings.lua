@@ -1,6 +1,7 @@
 local awful = require('awful')
 local menubar = require('menubar')
 local naughty = require('naughty')
+
 -- {{{ Mouse bindings
 root.buttons(awful.util.table.join(
 awful.button({ }, 3, function () mymainmenu:toggle() end),
@@ -44,9 +45,9 @@ function ()
 end),
 
 --Multimedia keys
-awful.key({ }, 'XF86AudioRaiseVolume', function () volume('up',volbar,volimg) end),
-awful.key({ }, 'XF86AudioLowerVolume', function () volume('down',volbar,volimg) end),
-awful.key({ }, 'XF86AudioMute', function () volume('mute',volbar,volimg) end),
+awful.key({ }, 'XF86AudioRaiseVolume', function () volume:up() end),
+awful.key({ }, 'XF86AudioLowerVolume', function () volume:down() end),
+awful.key({ }, 'XF86AudioMute', function () volume:toggle() end),
 awful.key({ }, 'XF86AudioPlay', function () awful.util.spawn_with_shell('ncmpcpp toggle') end),     	
 awful.key({ }, 'XF86AudioNext', function () awful.util.spawn_with_shell('ncmpcpp next') end),     	
 awful.key({ }, 'XF86AudioPrev', function () awful.util.spawn_with_shell('ncmpcpp prev') end),     	

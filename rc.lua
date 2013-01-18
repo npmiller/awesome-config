@@ -184,14 +184,30 @@ for s = 1, screen.count() do
 
 	local spacers = require('widgets/spacers')
 	--Volume control
-	local volume = require('widgets/vol')
-	volume:update()
+	local vol = require('widgets/vol')
+	volume = vol:new(0, 'Master', { })
 	volume.widget = wibox.layout.fixed.horizontal()
 	volume.widget:add(spacers.lbracket) 
 	volume.widget:add(spacers.space) 
 	volume.widget:add(volume.barm)
 	volume.widget:add(volume.img) 
 	volume.widget:add(spacers.rbracket)
+	volume:update()
+	volume.img:buttons(awful.util.table.join(
+	awful.button({ }, 1,function() volume:toggle() end),
+
+	awful.button({ }, 3, function () awful.util.spawn("urxvtc -e alsamixer", true) end),
+	awful.button({ }, 4, function () volume:up() end),
+	awful.button({ }, 5, function () volume:down() end)
+	))
+
+	volume.bar:buttons(awful.util.table.join(
+	awful.button({ }, 1, function () volume:toggle() end),
+	awful.button({ }, 3, function () awful.util.spawn("urxvtc -e alsamixer", true) end),
+	awful.button({ }, 4, function () volume:up() end),
+	awful.button({ }, 5,  function () volume:down() end)
+	))
+
 
 
 	
@@ -245,7 +261,7 @@ for s = 1, screen.count() do
 		--my2wibox:set_bg(gears.color.create_png_pattern("/home/nicolas/test-awesome.png"))
 end
 -- }}}
-
+test = 'sdfghjklm'
 require('bindings')
 
 require('rules')
@@ -276,8 +292,8 @@ client.connect_signal('manage', function (c, startup)
 		end
 	end
 
-    local titlebars_enabled = false
-    if titlebars_enabled and awful.client.floating.get(c) then --(c.type == "normal" or c.type == "dialog")  then
+    local titlebars_enabled = true
+    if titlebars_enabled and c.type == "dialog" then --(c.type == "normal" or c.type == "dialog")  then
         -- Widgets that are aligned to the left
         local left_layout = wibox.layout.fixed.horizontal()
         left_layout:add(awful.titlebar.widget.iconwidget(c))

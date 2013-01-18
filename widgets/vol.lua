@@ -3,69 +3,68 @@ local beautiful = require('beautiful')
 local wibox = require('wibox')
 local awful = require('awful')
 
-local vol = { }
-local cardid  = 0
-local channel = "Master"
-local normalimg = beautiful.spkr_01
-local muteimg = beautiful.spkr_02
+local volume = { }
 
-function volume (mode, bar, img)
-	if mode == "update" then
-             local fd = io.popen("amixer -c " .. cardid .. " -- sget " .. channel)
-             local status = fd:read("*all")
-             fd:close()
- 
-		local volume = string.match(status, "(%d?%d?%d)%%")
-		volume = string.format("% 3d", volume)
+function volume:new(cardid, channel, props)
+	local props = props or { }
+	local bar_props = props.bar_props or { }
+	local vol = { }
+
+	vol.cardid = cardid -- 0
+	vol.channel = channel or 'Master' -- Master
+	vol.imgs = { normalimg = props.normalimg or beautiful.spkr_01, muteimg = props.mutemimg or beautiful.spkr_02 }
+
+
+	vol.img = wibox.widget.imagebox()
+
+	vol.bar = awful.widget.progressbar()
+
+
+	vol.bar:set_width(bar_props.width or 50)
+	vol.bar:set_height(bar_props.height or 6)
+	vol.bar:set_vertical(bar_props.vertical or false)
+	vol.bar:set_background_color(bar_props.bg_color or beautiful.bg_normal or "#434343")
+	vol.bar:set_border_color(nil or bar_props.border_color)
+	vol.bar:set_color(bar_props.fg_color or beautiful.fg_normal)
+
+	vol.barm = wibox.layout.margin(vol.bar, 0, 0, 6, 4)
+
+	setmetatable(vol, {__index = self})
+
+	return vol
+end
+
+function volume:update()
+		local fd = io.popen("amixer -c " .. self.cardid .. " -- sget " .. self.channel)
+		local status = fd:read("*all")
+		fd:close()
+
+		local vol = string.match(status, "(%d?%d?%d)%%")
+		vol = string.format("% 3d", vol)
 		status = string.match(status, "%[(o[^%]]*)%]")
 		if string.find(status, "on", 1, true) then
-			bar:set_value(volume/100)
-			img:set_image(normalimg)
+			self.bar:set_value(vol/100)
+			self.img:set_image(self.imgs.normalimg)
 		else
-			bar:set_value(volume/100)
-			img:set_image(muteimg)
+			self.bar:set_value(vol/100)
+			self.img:set_image(self.imgs.muteimg)
 		end
-		
-	elseif mode == "up" then
-		io.popen("amixer sset " .. channel .. " 5%+"):read("*all")
-		volume("update",bar,img)
-	elseif mode == "down" then
-		io.popen("amixer sset " .. channel .. " 5%-"):read("*all")
-		volume("update", bar, img)
-	else
-		io.popen("amixer sset " .. channel .. " toggle"):read("*all")
-		volume("update", bar, img)
-	end
-end
-vol.img = wibox.widget.imagebox()
-vol.img:set_image(normalimg)
-
-	vol.img:buttons(awful.util.table.join(
-    awful.button({ }, 1, function () awful.util.spawn("amixer -q sset Master toggle", false) volume("update",vol.bar,vol.img)  end),
-    awful.button({ }, 3, function () awful.util.spawn("urxvtc -e alsamixer", true) end),
-    awful.button({ }, 4, function () volume("up",vol.bar,vol.img) end),
-    awful.button({ }, 5, function () volume("down",vol.bar,vol.img) end)
-	))
-
-vol.bar = awful.widget.progressbar()
-vol.bar:set_width(50)
-vol.bar:set_height(6)
-vol.bar:set_vertical(false)
-vol.bar:set_background_color("#434343")
-vol.bar:set_border_color(nil)
-vol.bar:set_color(beautiful.fg_normal)
---awful.widget.layout.margins[volbar.widget] = { top = 6 }
-
-	vol.bar:buttons(awful.util.table.join(
-    awful.button({ }, 1, function () awful.util.spawn("amixer -q sset Master toggle", false) volume("update",vol.bar,vol.img) end),
-    awful.button({ }, 3, function () awful.util.spawn("urxvtc -e alsamixer", true) end),
-    awful.button({ }, 4, function () volume("up",vol.bar,vol.img) end),
-    awful.button({ }, 5, function () volume("down",vol.bar,vol.img) end)
-	))
-vol.update = function (self)
-	volume("update", self.bar, self.img)
 end
 
-vol.barm = wibox.layout.margin(vol.bar, 0, 0, 6, 4)
+function volume:up()
+		io.popen("amixer sset " .. self.channel .. " 5%+"):read("*all")
+		self:update()
+end
 
-return vol
+function volume:down()
+		io.popen("amixer sset " .. self.channel .. " 5%-"):read("*all")
+		self:update()
+end
+
+function volume:toggle()
+		io.popen("amixer sset " .. self.channel .. " toggle"):read("*all")
+		self:update()
+end
+--Le :read("*all") permet d'attendre un peu de sorte que la fonction update puisse détecter les changements
+
+return volume
