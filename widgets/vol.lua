@@ -57,7 +57,7 @@ vol.bar:set_color(beautiful.fg_normal)
 --awful.widget.layout.margins[volbar.widget] = { top = 6 }
 
 	vol.bar:buttons(awful.util.table.join(
-    awful.button({ }, 1, function () awful.util.spawn("amixer -q sset Master toggle", false) volume("update",volbar,volimg) end),
+    awful.button({ }, 1, function () awful.util.spawn("amixer -q sset Master toggle", false) volume("update",vol.bar,vol.img) end),
     awful.button({ }, 3, function () awful.util.spawn("urxvtc -e alsamixer", true) end),
     awful.button({ }, 4, function () volume("up",vol.bar,vol.img) end),
     awful.button({ }, 5, function () volume("down",vol.bar,vol.img) end)
