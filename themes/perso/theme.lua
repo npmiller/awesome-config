@@ -12,8 +12,7 @@ folder = "/home/nicolas/.config/awesome/themes/perso/"
 
 -- {{{ Main
 theme = {}
---theme.wallpaper_cmd = { "awsetbg " .. folder .. "background" }
-theme.wallpaper = folder .. "background"
+theme.wallpaper = "/home/nicolas/Pics/Wallpapers/nintendo.jpg"
 -- }}}
 
 -- {{{ Styles
@@ -21,7 +20,7 @@ theme.wallpaper = folder .. "background"
 
 -- {{{ Colors
 theme.fg_normal = "#FFFFFF"
-theme.fg_focus  = "#7679E7"
+theme.fg_focus  = "#FFFFFF"
 theme.fg_urgent = "#FFFFFF"
 theme.bg_normal = "#000000"
 theme.bg_focus  = "#000000"
@@ -36,8 +35,10 @@ theme.border_marked = "#CC9393"
 -- }}}
 
 -- {{{ Titlebars
-theme.titlebar_bg_focus  = "#3F3F3F"
-theme.titlebar_bg_normal = "#3F3F3F"
+--theme.titlebar_bg_focus  = "#3F3F3F"
+--theme.titlebar_bg_normal = "#000000"
+theme.titlebar_fg_focus = "FFFFFF"
+theme.titlebar_fg_normal = "8F8F8F"
 -- }}}
 
 --There are other variable sets
@@ -50,6 +51,8 @@ theme.titlebar_bg_normal = "#3F3F3F"
 theme.taglist_bg_focus = "#000000"
 theme.taglist_fg_focus = "#8F8F8F8F"
 theme.tasklist_bg_focus = "#000000"
+theme.tasklist_fg_focus = "#FFFFFF"
+theme.tasklist_fg_normal = "#8F8F8F"
 theme.tooltip_bg_color = "#000000"
 theme.tooltip_fg_color = "#FFFFFF"
 theme.tooltip_opacity = "0.75"
