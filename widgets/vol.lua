@@ -23,7 +23,7 @@ function volume:new(cardid, channel, props)
 	vol.bar:set_width(bar_props.width or 50)
 	vol.bar:set_height(bar_props.height or 6)
 	vol.bar:set_vertical(bar_props.vertical or false)
-	vol.bar:set_background_color(bar_props.bg_color or beautiful.bg_normal or "#434343")
+	vol.bar:set_background_color(bar_props.bg_color or "#434343")
 	vol.bar:set_border_color(nil or bar_props.border_color)
 	vol.bar:set_color(bar_props.fg_color or beautiful.fg_normal)
 

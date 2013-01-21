@@ -22,7 +22,7 @@ function battery:new(bat_name, props)
 	bat.bar:set_width(bar_props.width or 50)
 	bat.bar:set_height(bar_props.width or 6)
 	bat.bar:set_vertical(bar_props.vertical or false)
-	bat.bar:set_background_color(bar_props.bg_color or beautiful.bg_normal or '#434343')
+	bat.bar:set_background_color(bar_props.bg_color or '#434343')
 	bat.bar:set_border_color(nil or bar_props.border_color)
 	bat.bar:set_color(bar_props.fg_color or beautiful.fg_normal or '#000000')
 	-- Settings margins on the progressbar
