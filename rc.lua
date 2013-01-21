@@ -261,39 +261,11 @@ for s = 1, screen.count() do
 		--my2wibox:set_bg(gears.color.create_png_pattern("/home/nicolas/test-awesome.png"))
 end
 -- }}}
-test = 'sdfghjklm'
 require('bindings')
 
 require('rules')
 
--- {{{ Signals
--- Signal function to execute when a new client appears.
-client.connect_signal('manage', function (c, startup)
-	-- Add a titlebar
-	-- awful.titlebar.add(c, { modkey = modkey })
-
-	-- Enable sloppy focus
-	c:connect_signal('mouse::enter', function(c)
-		if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
-			and awful.client.focus.filter(c) then
-			client.focus = c
-		end
-	end)
-
-	if not startup then
-		-- Set the windows at the slave,
-		-- i.e. put it at the end of others instead of setting it master.
-		-- awful.client.setslave(c)
-
-		-- Put windows in a smart way, only if they does not set an initial position.
-		if not c.size_hints.user_position and not c.size_hints.program_position then
-			awful.placement.no_overlap(c)
-			awful.placement.no_offscreen(c)
-		end
-	end
-
-    local titlebars_enabled = true
-    if titlebars_enabled and c.type == "dialog" then --(c.type == "normal" or c.type == "dialog")  then
+function titlebar_create(c)
         -- Widgets that are aligned to the left
         local left_layout = wibox.layout.fixed.horizontal()
         left_layout:add(awful.titlebar.widget.iconwidget(c))
@@ -327,9 +299,51 @@ client.connect_signal('manage', function (c, startup)
         layout:set_right(right_layout)
         layout:set_middle(title)
 
+		return layout
+end
+-- {{{ Signals
+-- Signal function to execute when a new client appears.
+client.connect_signal('manage', function (c, startup)
+	-- Add a titlebar
+	-- awful.titlebar.add(c, { modkey = modkey })
+
+	-- Enable sloppy focus
+	c:connect_signal('mouse::enter', function(c)
+		if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
+			and awful.client.focus.filter(c) then
+			client.focus = c
+		end
+	end)
+
+	c:connect_signal("property::floating", function(c)  if awful.client.floating.get(c) 
+        then
+               awful.titlebar(c):set_widget(titlebar_create(c)) 
+        else
+               awful.titlebar(c, {size = 0}) 
+        end
+	end)
+	if not startup then
+		-- Set the windows at the slave,
+		-- i.e. put it at the end of others instead of setting it master.
+		-- awful.client.setslave(c)
+
+		-- Put windows in a smart way, only if they does not set an initial position.
+		if not c.size_hints.user_position and not c.size_hints.program_position then
+			awful.placement.no_overlap(c)
+			awful.placement.no_offscreen(c)
+		end
+	end
+
+    local titlebars_enabled = true
+    if titlebars_enabled and c.type == "dialog" then --(c.type == "normal" or c.type == "dialog")  then
+		layout = titlebar_create(c)
         awful.titlebar(c):set_widget(layout)
     end
 end)
+
+
+
+
 
 client.connect_signal('focus', function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal('unfocus', function(c) c.border_color = beautiful.border_normal end)
