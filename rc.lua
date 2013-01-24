@@ -181,6 +181,8 @@ for s = 1, screen.count() do
 	mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
 	mytextclock = awful.widget.textclock()
+	local cal = require('widgets/cal')
+	cal:register(mytextclock)
 
 	local spacers = require('widgets/spacers')
 	--Volume control

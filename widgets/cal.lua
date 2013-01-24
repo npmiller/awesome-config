@@ -5,7 +5,7 @@
 --   + the current day formating is customizable
 -- modified by Jörg Thalheim (Mic92) <jthalheim@gmail.com> (2011), under the same licence,
 -- and with the following changes:
---   + use tooltip instead of naughty.notify 
+--   + use self.tooltip instead of naughty.notify 
 --   + rename it to cal
 --
 -- # How to Install #
@@ -27,13 +27,11 @@ local string = {format = string.format}
 local os = {date = os.date, time = os.time} 
 local awful = require("awful")
 
-module("widgets.cal")
+local cal = { }
+cal.state = { }
+cal.current_day_format = "<u>%s</u>"
 
-local tooltip
-local state = {}
-local current_day_format = "<u>%s</u>"
-
-function displayMonth(month,year,weekStart)
+function cal:displayMonth(month,year,weekStart)
         local t,wkSt=os.time{year=year, month=month+1, day=0},weekStart or 1
         local d=os.date("*t",t)
         local mthDays,stDay=d.day,(d.wday-d.day-wkSt+1)%7
@@ -60,7 +58,7 @@ function displayMonth(month,year,weekStart)
                         lines = lines .. "\n" .. os.date(" %V",t) .. ' |'
                 end
                 if os.date("%Y-%m-%d") == os.date("%Y-%m-%d", t) then
-                        x = string.format(current_day_format, d)
+                        x = string.format(self.current_day_format, d)
                 end
                 if d < 10 then
                         x = " " .. x
@@ -73,49 +71,51 @@ function displayMonth(month,year,weekStart)
         return header .. "\n" .. lines
 end
 
-function register(mywidget, custom_current_day_format)
-	if custom_current_day_format then current_day_format = custom_current_day_format end
+function cal:register(mywidget, custom_current_day_format)
+	if custom_current_day_format then self.current_day_format = custom_self.current_day_format end
 
-	if not tooltip then
-		tooltip = awful.tooltip({})
+	if not self.tooltip then
+		self.tooltip = awful.tooltip({})
 	end
-	tooltip:add_to_object(mywidget)
+	self.tooltip:add_to_object(mywidget)
 
-	mywidget:add_signal("mouse::enter", function()
+	mywidget:connect_signal("mouse::enter", function()
 		local month, year = os.date('%m'), os.date('%Y')
-		state = {month, year}
-		tooltip:set_text(string.format('<span font_desc="monospace 10">%s</span>', displayMonth(month, year, 2)))
+		self.state = {month, year}
+		self.tooltip:set_text(string.format('<span font_desc="monospace 10">%s</span>', self:displayMonth(month, year, 2)))
 	end)
 
 	mywidget:buttons(awful.util.table.join(
 	awful.button({ }, 1, function()
-		switchMonth(-1)
+		self:switchMonth(-1)
 	end),
 	awful.button({ }, 3, function()
-		switchMonth(1)
+		self:switchMonth(1)
 	end),
 	awful.button({ }, 4, function()
-		switchMonth(-1)
+		self:switchMonth(-1)
 	end),
 	awful.button({ }, 5, function()
-		switchMonth(1)
+		self:switchMonth(1)
 	end),
 	awful.button({ 'Shift' }, 1, function()
-		switchMonth(-12)
+		self:switchMonth(-12)
 	end),
 	awful.button({ 'Shift' }, 3, function()
-		switchMonth(12)
+		self:switchMonth(12)
 	end),
 	awful.button({ 'Shift' }, 4, function()
-		switchMonth(-12)
+		self:switchMonth(-12)
 	end),
 	awful.button({ 'Shift' }, 5, function()
-		switchMonth(12)
+		self:switchMonth(12)
 	end)))
 end
 
-function switchMonth(delta)
-	state[1] = state[1] + (delta or 1)
-	local text = string.format('<span font_desc="monospace 10">%s</span>', displayMonth(state[1], state[2], 2))
-	tooltip:set_text(text)
+function cal:switchMonth(delta)
+	self.state[1] = self.state[1] + (delta or 1)
+	local text = string.format('<span font_desc="monospace 10">%s</span>', self:displayMonth(self.state[1], self.state[2], 2))
+	self.tooltip:set_text(text)
 end
+
+return cal
