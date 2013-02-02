@@ -69,15 +69,7 @@ end
 
 
 
-function chd(delta)
-	hl = (hl + delta)
-	if hl <= 0 then
-		hl = #disks
-	elseif hl > #disks then
-		hl = 1
-	end
-	usbtooltip:set_text(display())
-end
+
 
 
 function lsof(disk)
@@ -91,6 +83,19 @@ end
 
 local usb = {}
 usb.img = wibox.widget.imagebox()
+usb.tooltip = awful.tooltip({ })
+usb.tooltip:add_to_object(usb.img)
+
+function usb:chd(delta)
+	hl = (hl + delta)
+	if hl <= 0 then
+		hl = #disks
+	elseif hl > #disks then
+		hl = 1
+	end
+	self.tooltip:set_text(display())
+end
+
 function usb.img.visible(self, bool)
 	if bool then
 		self:set_image(beautiful.usb)
@@ -100,8 +105,6 @@ function usb.img.visible(self, bool)
 end
 
 --usb.img:draw(false)
-usb.tooltip = awful.tooltip({ })
-usb.tooltip:add_to_object(usb.img)
 usb.img:connect_signal('mouse::enter', 
 function()
 	hl = 1
@@ -110,8 +113,8 @@ function()
 end)
 
 usb.img:buttons(awful.util.table.join(
-awful.button({ }, 4, function() chd(-1) end),
-awful.button({ }, 5, function() chd(1) end),
+awful.button({ }, 4, function() usb:chd(-1) end),
+awful.button({ }, 5, function() usb:chd(1) end),
 awful.button({ }, 1, function() naughty.notify({text = usbMount(disks[hl])}) end),
 awful.button({ }, 3, function()
 	t = usbUnmount(disks[hl]) or 'Unmounted ' .. disks[hl]
