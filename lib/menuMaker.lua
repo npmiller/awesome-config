@@ -2,8 +2,8 @@
 --{{
 
 appfolder = "/usr/share/applications/"
-menuFile = os.getenv("XDG_CONFIG_HOME") .. "/awesome/appMenu.lua"
-config = os.getenv("XDG_CONFIG_HOME")
+menuFile = os.getenv("HOME") .. "/.config/awesome/appMenu.lua"
+config = os.getenv("HOME") .. "/.config"
 terminal = "urxvtc"
 
 
