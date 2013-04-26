@@ -5,9 +5,10 @@ local naughty = require('naughty')
 
 hl = 1
 disks = { }
+disksToDisplay = { }
 function usbCheck()
 	ignoredDevices = { 'sda', 'sr0' }
-	cmd = 'udisks --enumerate'
+	cmd = 'udisksctl dump'
 	for i=1,#ignoredDevices do
 		cmd = cmd .. ' | grep -v ' .. ignoredDevices[i] 
 	end
@@ -19,14 +20,18 @@ function usbCheck()
 		return false
 	else
 		while line ~= nil do
-			disk = string.match(line,'sd%a%d')
+			disk = string.match(line,'[ \t]+Device:[ \t]*(/dev/sd%a%d*)')
 			if disk ~= nil then
-				table.insert(disks,disk)
+				diskInfo = io.popen('udisksctl info -b ' .. disk):read('*all')
+				if string.match(diskInfo, '[ \t]*IdUsage:[ \t]*(%a-)\n')=='filesystem' then
+					table.insert(disks,disk)
+				end
 			end
 			line = f:read('*line')
 		end
 		f:close()
 		if next(disks) ~= nil then
+			disksInfo()
 			return true
 		else
 			return false
@@ -36,7 +41,7 @@ end
 
 
 function usbMount(disk)
-	f = io.popen('udisks --mount /dev/' .. disk)
+	f = io.popen('udisksctl mount -b ' .. disk)
 	info = f:read('*all')
 	f:close()
 	return info
@@ -44,25 +49,32 @@ end
 
 
 function usbUnmount(disk)
-	local f = io.popen('udisks --unmount /dev/' .. disk)
+	local f = io.popen('udisksctl unmount -b ' .. disk)
 	local info = f:read('*line')
 	f:close()
 	return info
 end
 
+function disksInfo()
+	disksToDisplay = { }
+	for i=1,#disks do
+		f = io.popen('udisksctl info -b ' .. disks[i]):read('*all')
+		elt = string.match(f,'[ \t]*IdLabel:[ \t]*([^ ]-)\n')
+		if elt == '' then elt = string.match(f, '[ \t]*IdUUID:[ \t]*([^ ]-)\n') end
+		f = io.popen('udisksctl info -b ' .. disks[i]):read('*all')
+		elt = elt .. ' ' .. (string.match(f, '[ \t]*MountPoints:[ \t]*([^ ]-)\n') or '') 
+		disksToDisplay[i] = elt
+	end
+end
 
 function display()
 	local str = ''
-	for i=1,#disks do
-		f = io.popen('udisks --show-info /dev/' .. disks[i] .. ' | grep label')
-		elt = string.gsub(f:read('*line'),'  label:                       ','')
-		f:close()
+	for i=1,#disksToDisplay do
 		if i == hl then
-			elt = '<u>' .. elt ..'</u>'
+			str = str .. '<u>' .. disksToDisplay[i] .. '</u>\n'
+		else
+			str = str .. disksToDisplay[i] .. '\n'
 		end
-		f = io.popen('udisks --show-info /dev/' .. disks[i] .. ' | grep "mount paths"')
-		elt = string.gsub(f:read('*line'),'  mount paths:             ','') .. ' ' .. elt
-		str = str .. elt .. ' \n'
 	end
 	return "<span font_desc='monospace 10'>" .. str .. "</span>"
 end
@@ -104,11 +116,9 @@ function usb.img.visible(self, bool)
 	end
 end
 
---usb.img:draw(false)
 usb.img:connect_signal('mouse::enter', 
 function()
 	hl = 1
-	usbCheck()
 	usb.tooltip:set_text(display()) 
 end)
 
