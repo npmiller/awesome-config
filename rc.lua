@@ -1,6 +1,6 @@
 -- Standard awesome library
 local awful = require('awful')
---require('awful.autofocus')
+require('awful.autofocus')
 -- Theme handling library
 local beautiful = require('beautiful')
 -- Notification library
@@ -18,7 +18,7 @@ require('lib/runBackground')
 --awful.util.spawn_with_shell('xcompmgr')
 --awful.util.spawn_with_shell('xsetroot -cursor_name left_ptr')
 --awful.util.spawn_with_shell('wicd-client --tray')
-awful.util.spawn_with_shell('urxvtd')
+--awful.util.spawn_with_shell('urxvtd')
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -71,11 +71,11 @@ layouts =
 	awful.layout.suit.tile.top, --5
 	awful.layout.suit.fair, --6
 	awful.layout.suit.fair.horizontal, --7
-	--	    awful.layout.suit.spiral, --8
-	--	    awful.layout.suit.spiral.dwindle, --9
-	--	    awful.layout.suit.max, --10
-	--	    awful.layout.suit.max.fullscreen, --11
-	--	    awful.layout.suit.magnifier --12
+        awful.layout.suit.spiral, --8
+        awful.layout.suit.spiral.dwindle, --9
+	awful.layout.suit.max, --10
+	awful.layout.suit.max.fullscreen, --11
+	awful.layout.suit.magnifier --12
 }
 -- }}}
 
@@ -91,7 +91,7 @@ end
 -- Define a tag table which hold all screen tags.
 tags = {
 	names = { 'web' , 'term' , 'office' ,'file' , 'film' , 'misc' ,  'music' , 'mail' , 'im' },
-	layout = { layouts[1] , layouts[2] , layouts[2] , layouts[2] , layouts[2] , layouts[2] , layouts[2] , layouts[2] , layouts[2] } 
+	layout = { layouts[4] , layouts[4] , layouts[4] , layouts[4] , layouts[4] , layouts[4] , layouts[4] , layouts[4] , layouts[4] } 
 }
 for s = 1, screen.count() do
 	-- Each screen has its own tag table.
@@ -181,18 +181,21 @@ for s = 1, screen.count() do
 	mytasklist[s] = awful.widget.tasklist(s, awful.widget.tasklist.filter.currenttags, mytasklist.buttons)
 
 	mytextclock = awful.widget.textclock()
-	local cal = require('widgets/cal')
-	cal:register(mytextclock)
+	local cal = require('widgets/calendar')
+	cal:addCalendarToWidget(mytextclock)
 
 	local spacers = require('widgets/spacers')
+
 	--Volume control
 	local vol = require('widgets/vol')
 	volume = vol:new(0, 'Master', { })
 	volume.widget = wibox.layout.fixed.horizontal()
 	volume.widget:add(spacers.lbracket) 
-	volume.widget:add(spacers.space) 
-	volume.widget:add(volume.barm)
 	volume.widget:add(volume.img) 
+	volume.widget:add(spacers.space)
+	volume.widget:add(volume.barm)
+	volume.widget:add(spacers.space)
+	volume.widget:add(spacers.space)
 	volume.widget:add(spacers.rbracket)
 	volume:update()
 	volume.img:buttons(awful.util.table.join(
@@ -218,9 +221,11 @@ for s = 1, screen.count() do
 	battery = bat:new('BAT0')
 	battery.widget = wibox.layout.fixed.horizontal()
 	battery.widget:add(spacers.lbracket) 
+	battery.widget:add(battery.img) 
 	battery.widget:add(spacers.space)
 	battery.widget:add(battery.barm) 
-	battery.widget:add(battery.img) 
+	battery.widget:add(spacers.space)
+	battery.widget:add(spacers.space)
 	battery.widget:add(spacers.rbracket)
 	--Refresh battery applet
 	battery:update()
@@ -242,13 +247,16 @@ for s = 1, screen.count() do
 
 		local right_layout = wibox.layout.fixed.horizontal()
 		right_layout:add(usb.img)
-		right_layout:add(mytextclock)
 		right_layout:add(volume.widget)
 		right_layout:add(battery.widget)
+		right_layout:add(spacers.lbracket)
+		right_layout:add(mytextclock)
+		right_layout:add(spacers.rbracket)
 		
 
 		local layout = wibox.layout.align.horizontal()
 		layout:set_left(left_layout)
+		layout:set_middle(clockLayout)
 		layout:set_right(right_layout)
 		mywibox[s]:set_widget(layout)
 
@@ -257,8 +265,10 @@ for s = 1, screen.count() do
 		right_layout = wibox.layout.fixed.horizontal()
 		right_layout:add(mysystray)
 		right_layout:add(mylayoutbox[s])
+		left_layout = wibox.layout.fixed.horizontal()
+		left_layout:add(mytasklist[s])
 		layout2:set_right(right_layout)
-		layout2:set_left(mytasklist[s])
+		layout2:set_middle(left_layout)
 		my2wibox:set_widget(layout2)
 		--my2wibox:set_bg(gears.color.create_png_pattern("/home/nicolas/test-awesome.png"))
 end
@@ -270,7 +280,7 @@ require('rules')
 function titlebar_create(c)
         -- Widgets that are aligned to the left
         local left_layout = wibox.layout.fixed.horizontal()
-        left_layout:add(awful.titlebar.widget.iconwidget(c))
+        --left_layout:add(awful.titlebar.widget.iconwidget(c))
 
         -- Widgets that are aligned to the right
         local right_layout = wibox.layout.fixed.horizontal()
@@ -314,15 +324,16 @@ client.connect_signal('manage', function (c, startup)
 		if awful.layout.get(c.screen) ~= awful.layout.suit.magnifier
 			and awful.client.focus.filter(c) then
 			client.focus = c
+			--c:raise()
 		end
 	end)
 
 	c:connect_signal("property::floating", function(c)  if awful.client.floating.get(c) 
-        then
-               awful.titlebar(c):set_widget(titlebar_create(c)) 
-        else
-               awful.titlebar(c, {size = 0}) 
-        end
+	then
+	       awful.titlebar(c):set_widget(titlebar_create(c)) 
+	else
+	       awful.titlebar(c, {size = 0}) 
+	end
 	end)
 	if not startup then
 		-- Set the windows at the slave,
@@ -337,9 +348,11 @@ client.connect_signal('manage', function (c, startup)
 	end
 
     local titlebars_enabled = true
-    if titlebars_enabled and c.type == "dialog" then --(c.type == "normal" or c.type == "dialog")  then
+    if titlebars_enabled and (c.type == "dialog" or awful.client.floating.get(c)) then --(c.type == "normal" or c.type == "dialog") then
+	    if c.class ~= "Avant-window-navigator" and c.name ~= "plugin-container" and c.class ~= "Plasma" and c.name ~= "plasma-desktop" then
 		layout = titlebar_create(c)
         awful.titlebar(c):set_widget(layout)
+end
     end
 end)
 

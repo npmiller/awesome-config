@@ -56,8 +56,9 @@ awful.key({modkey}, 'v', function() awful.util.spawn_with_shell('slimlock') end)
 
 --Print Screen
 --awful.key({ 'Control' }, 'Print', function () awful.util.spawn_with_shell('emprint /home/nicolas/Screenshots/') end),
-awful.key({ modkey }, 'Print', function () awful.util.spawn_with_shell('emprint --region /home/nicolas/Screenshots') end),
-awful.key({ modkey, 'shift' }, 'Print', function () awful.util.spawn_with_shell('emprint --window /home/nicolas/Screenshots') end),
+awful.key({ modkey }, 'Print', function () awful.util.spawn_with_shell('ksnapshot') end),
+awful.key({ modkey }, 's', function () awful.util.spawn_with_shell('synapse') end),
+--awful.key({ modkey, 'shift' }, 'Print', function () awful.util.spawn_with_shell('emprint --window /home/nicolas/Screenshots') end),
 
 -- Standard program
 awful.key({ modkey,           }, 'Return', function () awful.util.spawn(terminal) end),
@@ -134,16 +135,16 @@ awful.key({ modkey, 'Shift' }, 'p', function()
 		awful.util.getdir('cache') .. '/history_ping'
 		)
 	end),
-	awful.key({ modkey }, 's', function()
-		awful.prompt.run({ prompt = 'Search: ' }, mypromptbox[mouse.screen].widget,
-		function (expr) 
-			awful.util.spawn_with_shell('firefox https://duckduckgo.com/?q=' .. expr)
-			awful.tag.viewonly(tags[mouse.screen][1])
-		end,
-		nil,
-		awful.util.getdir('cache') .. '/history_search'
-		)
-	end),
+	--awful.key({ modkey }, 's', function()
+		--awful.prompt.run({ prompt = 'Search: ' }, mypromptbox[mouse.screen].widget,
+		--function (expr) 
+			--awful.util.spawn_with_shell('firefox https://duckduckgo.com/?q=' .. expr)
+			--awful.tag.viewonly(tags[mouse.screen][1])
+		--end,
+		--nil,
+		--awful.util.getdir('cache') .. '/history_search'
+		--)
+	--end),
 	awful.key({modkey}, 'i', function()
 		awful.prompt.run({ prompt = 'install: '}, mypromptbox[mouse.screen].widget,
 		function (expr)
@@ -173,6 +174,11 @@ awful.key({ modkey, 'Shift' }, 'p', function()
 	function (c)
 		c.maximized_horizontal = not c.maximized_horizontal
 		c.maximized_vertical   = not c.maximized_vertical
+	end),
+
+	-- Infos :
+	awful.key({ modkey, 'Shift' }, 't', function () 
+		naughty.notify({text = io.popen('task'):read('*all'), title = 'Pending tasks', timeout = 0})
 	end)
 	)
 
@@ -223,4 +229,5 @@ awful.key({ modkey, 'Shift' }, 'p', function()
 	-- Set keys
 	root.keys(globalkeys)
 	-- }}}
+
 

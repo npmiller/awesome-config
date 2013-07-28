@@ -8,6 +8,7 @@ configmenu = {
 	{ 'Bindings', editor_cmd .. ' ' .. awful.util.getdir('config') .. "/bindings.lua" },
 	{ 'Rules', editor_cmd .. ' ' .. awful.util.getdir('config') .. "/rules.lua" },
 	{ 'Menus', editor_cmd .. ' ' .. awful.util.getdir('config') .. "/menus.lua" },
+	{ 'Theme', editor_cmd .. ' ' .. awful.util.getdir('config') .. "/themes/perso/theme.lua" },
 }
 
 myawesomemenu = {
@@ -23,6 +24,11 @@ sysmenu = {
 	{ 'Suspend', 'systemctl suspend' },
 } 
 
+mailMenu = {
+	{ 'Insa', terminal .. ' -e mutt -F ~/.mutt/insa'},
+	{ 'Gmail', terminal .. ' -e mutt -F ~/.mutt/gmail'},
+	{ 'Quantic', terminal .. ' -e mutt -F ~/.mutt/quantic'},
+}
 
 --filesmenu = {
 	--{ 'Documents',function () co = coroutine.create(function () return genMenu('/home/nicolas/Documents/') end) ; _,tab = coroutine.resume(co) ; return tab end },
@@ -41,7 +47,8 @@ sysmenu = {
 mymainmenu = awful.menu({ items = { { 'Awesome', myawesomemenu --[[, beautiful.awesome_icon --]] },
 { 'System', sysmenu },
 { 'Apps', categoriesMenu },
-{ 'Files', filesmenu },
+{ 'Mail', mailMenu },
+{ 'Windows', function() awful.menu.clients() end },
 { 'Open terminal', terminal },
 } })
 

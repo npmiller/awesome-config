@@ -27,7 +27,7 @@ function volume:new(cardid, channel, props)
 	vol.bar:set_border_color(nil or bar_props.border_color)
 	vol.bar:set_color(bar_props.fg_color or beautiful.fg_normal)
 
-	vol.barm = wibox.layout.margin(vol.bar, 0, 0, 6, 4)
+	vol.barm = wibox.layout.margin(vol.bar, 0, 0, 5, 5)
 
 	setmetatable(vol, {__index = self})
 

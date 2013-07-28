@@ -1,5 +1,5 @@
 -------------------------------
---  "Fedora16" awesome theme --
+--      awesome theme        --
 --    By Nicolas M.          --
 -------------------------------
 
@@ -8,15 +8,17 @@
 
 
 -- Theme's folder
+--
 folder = "/home/nicolas/.config/awesome/themes/perso/"
 
 -- {{{ Main
 theme = {}
-theme.wallpaper = "/home/nicolas/Pics/Wallpapers/nintendo.jpg"
+theme.wallpaper = "/home/nicolas/Images/Fond d'écrans/1363408710284.jpg"
 -- }}}
 
 -- {{{ Styles
---theme.font      = "DejaVuSansMono 8"
+theme.font      = "Sans Bold 8"
+--theme.font      = "terminus 9"
 
 -- {{{ Colors
 theme.fg_normal = "#FFFFFF"

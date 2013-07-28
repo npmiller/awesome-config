@@ -28,8 +28,8 @@ function battery:new(bat_name, props)
 	-- Settings margins on the progressbar
 	bat.barm = wibox.layout.margin(bat.bar, bar_margins.left or 0,
 											bar_margins.right or 0,
-											bar_margins.top or 6,
-											bar_margins.bottom or 4)
+											bar_margins.top or 5,
+											bar_margins.bottom or 5)
 	-- Icons
 	bat.img = wibox.widget.imagebox()
 	bat.imgs = imgs

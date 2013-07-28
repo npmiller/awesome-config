@@ -11,7 +11,7 @@ local capi = {
     screen = screen,
 }
 
-module("lib.layout.center")
+--module("lib.layout.center")
 
 function center(bounds, widgets, screen)
     local geometries = {
